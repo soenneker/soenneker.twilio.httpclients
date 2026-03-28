@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Soenneker.Dtos.HttpClientOptions;
-using Soenneker.Extensions.Configuration;
 using Soenneker.Twilio.HttpClients.Abstract;
 using Soenneker.Utils.HttpClientCache.Abstract;
 
@@ -27,22 +25,11 @@ public sealed class TwilioOpenApiHttpClient : ITwilioOpenApiHttpClient
 
     public ValueTask<HttpClient> Get(CancellationToken cancellationToken = default)
     {
-        return _httpClientCache.Get(nameof(TwilioOpenApiHttpClient), (config: _config, baseUrl: _config["Twilio:ClientBaseUrl"] ?? _prodBaseUrl), static state =>
-        {
-            var apiKey = state.config.GetValueStrict<string>("Twilio:ApiKey");
-            string authHeaderName = state.config["Twilio:AuthHeaderName"] ?? "Bearer {token}";
-            string authHeaderValueTemplate = state.config["Twilio:AuthHeaderValueTemplate"] ?? "{token}";
-            string authHeaderValue = authHeaderValueTemplate.Replace("{token}", apiKey, StringComparison.Ordinal);
-
-            return new HttpClientOptions
+        return _httpClientCache.Get(nameof(TwilioOpenApiHttpClient), (config: _config, baseUrl: _config["Twilio:ClientBaseUrl"] ?? _prodBaseUrl),
+            static state => new HttpClientOptions
             {
-                BaseAddress = new Uri(state.baseUrl),
-                DefaultRequestHeaders = new Dictionary<string, string>
-                {
-                    {authHeaderName, authHeaderValue},
-                }
-            };
-        }, cancellationToken);
+                BaseAddress = new Uri(state.baseUrl)
+            }, cancellationToken);
     }
 
     public void Dispose()
