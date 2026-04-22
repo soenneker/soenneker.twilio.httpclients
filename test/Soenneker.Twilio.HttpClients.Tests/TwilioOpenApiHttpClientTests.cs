@@ -1,20 +1,19 @@
 using Soenneker.Twilio.HttpClients.Abstract;
-using Soenneker.Tests.FixturedUnit;
-using Xunit;
+using Soenneker.Tests.HostedUnit;
 
 namespace Soenneker.Twilio.HttpClients.Tests;
 
-[Collection("Collection")]
-public sealed class TwilioOpenApiHttpClientTests : FixturedUnitTest
+[ClassDataSource<Host>(Shared = SharedType.PerTestSession)]
+public sealed class TwilioOpenApiHttpClientTests : HostedUnitTest
 {
     private readonly ITwilioOpenApiHttpClient _httpclient;
 
-    public TwilioOpenApiHttpClientTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
+    public TwilioOpenApiHttpClientTests(Host host) : base(host)
     {
         _httpclient = Resolve<ITwilioOpenApiHttpClient>(true);
     }
 
-    [Fact]
+    [Test]
     public void Default()
     {
 
