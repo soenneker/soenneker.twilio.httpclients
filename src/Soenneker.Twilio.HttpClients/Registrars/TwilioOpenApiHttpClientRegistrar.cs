@@ -6,7 +6,7 @@ using Soenneker.Utils.HttpClientCache.Registrar;
 namespace Soenneker.Twilio.HttpClients.Registrars;
 
 /// <summary>
-/// Registers the OpenAPI HttpClient wrapper for dependency injection.
+/// Registers the cached Twilio REST transport.
 /// </summary>
 public static class TwilioOpenApiHttpClientRegistrar
 {

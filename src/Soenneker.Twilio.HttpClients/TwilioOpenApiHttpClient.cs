@@ -9,13 +9,13 @@ using Soenneker.Utils.HttpClientCache.Abstract;
 
 namespace Soenneker.Twilio.HttpClients;
 
-///<inheritdoc cref="ITwilioOpenApiHttpClient"/>
 public sealed class TwilioOpenApiHttpClient : ITwilioOpenApiHttpClient
 {
     private readonly IHttpClientCache _httpClientCache;
     private readonly IConfiguration _config;
+    private readonly string _cacheKey = $"{nameof(TwilioOpenApiHttpClient)}-{Guid.NewGuid():N}";
 
-    private const string _prodBaseUrl = "https://api.twilio.com";
+    private const string _prodBaseUrl = "https://api.twilio.com/";
 
     public TwilioOpenApiHttpClient(IHttpClientCache httpClientCache, IConfiguration config)
     {
@@ -25,7 +25,7 @@ public sealed class TwilioOpenApiHttpClient : ITwilioOpenApiHttpClient
 
     public ValueTask<HttpClient> Get(CancellationToken cancellationToken = default)
     {
-        return _httpClientCache.Get(nameof(TwilioOpenApiHttpClient), (config: _config, baseUrl: _config["Twilio:ClientBaseUrl"] ?? _prodBaseUrl),
+        return _httpClientCache.Get(_cacheKey, (config: _config, baseUrl: _config["Twilio:ClientBaseUrl"] ?? _prodBaseUrl),
             static state => new HttpClientOptions
             {
                 BaseAddress = new Uri(state.baseUrl)
@@ -37,7 +37,7 @@ public sealed class TwilioOpenApiHttpClient : ITwilioOpenApiHttpClient
     /// </summary>
     public void Dispose()
     {
-        _httpClientCache.RemoveSync(nameof(TwilioOpenApiHttpClient));
+        _httpClientCache.RemoveSync(_cacheKey);
     }
 
     /// <summary>
@@ -46,6 +46,6 @@ public sealed class TwilioOpenApiHttpClient : ITwilioOpenApiHttpClient
     /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
-        return _httpClientCache.Remove(nameof(TwilioOpenApiHttpClient));
+        return _httpClientCache.Remove(_cacheKey);
     }
 }

@@ -6,12 +6,12 @@ using System.Threading;
 namespace Soenneker.Twilio.HttpClients.Abstract;
 
 /// <summary>
-/// A .NET thread-safe singleton HttpClient for 
+/// Provides an owned, cached <see cref="HttpClient"/> transport for Twilio's REST API.
 /// </summary>
-public interface ITwilioOpenApiHttpClient: IDisposable, IAsyncDisposable
+public interface ITwilioOpenApiHttpClient : IDisposable, IAsyncDisposable
 {
     /// <summary>
-    /// Gets the value.
+    /// Gets the configured Twilio HTTP transport.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task containing the result of the operation.</returns>
