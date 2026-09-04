@@ -9,6 +9,7 @@ using Soenneker.Utils.HttpClientCache.Abstract;
 
 namespace Soenneker.Twilio.HttpClients;
 
+/// <inheritdoc cref="ITwilioOpenApiHttpClient" />
 public sealed class TwilioOpenApiHttpClient : ITwilioOpenApiHttpClient
 {
     private readonly IHttpClientCache _httpClientCache;
